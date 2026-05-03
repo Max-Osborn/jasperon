@@ -478,6 +478,103 @@
       z-index: 4;
     }
     ::placeholder { color: #e6c596; opacity: 1;}
+    /* ------- Foxkick Modal Styles ------ */
+    .foxkick-modal {
+      position: fixed;
+      z-index: 14981;
+      inset: 0;
+      background: rgba(32,19,34,0.87);
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      animation: fadeinCongrats 0.16s;
+    }
+    .foxkick-popup {
+      background: linear-gradient(123deg,#270013e0 80%,#2a1a37e0 100%);
+      box-shadow: 0 0 0 8px #ff3c1160,
+                  0 0 38px 7px #ffb65b21,
+                  0 8px 44px 9px #ff32253a;
+      border-radius: 32px;
+      padding: 2.1rem 2.5rem 1.7rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 240px;
+      max-width: 92vw;
+      position: relative;
+    }
+    .foxkick-fox {
+      font-size: 3.3rem;
+      text-shadow: 0 2px 22px #ff3c1160, 0 0 12px #ffb132;
+      animation: foxPulse 1.3s infinite alternate cubic-bezier(.65,.17,.48,1.11);
+      margin-bottom: 13px;
+    }
+    .foxkick-title {
+      font-size: 1.42rem;
+      font-weight: 900;
+      background: linear-gradient(92deg, #fff0c7 12%, #ff6631 44%, #ff1600 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.92em;
+      letter-spacing: 0.01em;
+      text-align: center;
+      text-shadow: 0 2px 19px #ff3c113f,0 2px 44px #231c2c93;
+    }
+    .foxkick-msg {
+      margin: 0 0 1.3em 0;
+      color: #ffb132;
+      font-size: 1.09rem;
+      text-align: center;
+      text-shadow: 0 1px 8px #19121bbc;
+      font-family: 'Segoe UI',Arial,sans-serif;
+    }
+    .foxkick-btns {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 1em;
+    }
+    .foxkick-ok, .foxkick-fuckoff {
+      padding: 0.8em 2.2em;
+      border-radius: 21px;
+      border: none;
+      font-family: inherit;
+      font-size: 1.09rem;
+      font-weight: 700;
+      box-shadow: 0 2px 14px #ffb13241;
+      margin-top: 0.3em;
+      margin-bottom: 0.2em;
+      transition: background 0.19s, color 0.13s, transform 0.08s, box-shadow 0.19s;
+      cursor: pointer;
+      outline: none;
+    }
+    .foxkick-ok {
+      background: linear-gradient(94deg,#fca311 61%,#ff4600 100%);
+      color: #332100;
+    }
+    .foxkick-ok:hover,
+    .foxkick-ok:focus {
+      background: linear-gradient(97deg, #ff9300 37%, #ff4600 98%);
+      color: #211a11;
+      transform: scale(1.03);
+    }
+    .foxkick-fuckoff {
+      background: linear-gradient(97deg, #df3516 42%, #860700 100%);
+      color: #fff6f3;
+    }
+    .foxkick-fuckoff:hover,
+    .foxkick-fuckoff:focus {
+      background: linear-gradient(110deg,#c72118 57%,#400d0a 100%);
+      color: #fff;
+      transform: scale(1.05) rotate(-1deg);
+    }
+    @media (max-width: 480px) {
+      .foxkick-popup { padding: 1.2rem 0.5rem 1.0rem 0.5rem; max-width: 99vw; }
+      .foxkick-fox { font-size: 2.1rem;}
+      .foxkick-title { font-size: 1.15rem;}
+      .foxkick-btns { flex-direction: column; gap: 0.5em;}
+    }
   </style>
 </head>
 <body>
@@ -536,6 +633,22 @@
       <button type="submit">Enter</button>
     </form>
     <div class="message" id="message"></div>
+  </div>
+  <!-- Fox Spirits Angered Kicked Out Popup with Buttons -->
+  <div class="foxkick-modal" id="foxKickModal" style="display:none;">
+    <div class="foxkick-popup">
+      <span class="foxkick-fox">🦊💢</span>
+      <div class="foxkick-title">Fox Spirits Angered!</div>
+      <div class="foxkick-msg">
+        You have tried to enter the Den too many times.<br>
+        The spirits have cast you out!<br>
+        <span style="color:#ffb132;">This tab will close...</span>
+      </div>
+      <div class="foxkick-btns">
+        <button class="foxkick-ok" id="foxkickOkBtn">Okay</button>
+        <button class="foxkick-fuckoff" id="foxkickFuckBtn">Fuck Off</button>
+      </div>
+    </div>
   </div>
   <script>
     // Assign a unique code and UNIQUE password for each browser, no UI/leaks
@@ -750,6 +863,7 @@
             } else {
               try { window.open('', '_self', ''); window.close();}catch(e){}
               msg.textContent = 'You have angered the fox spirits! The tab will close now.';
+              showKickedPopup();
               setTimeout(function(){
                 hardBlockUI(now() + lockoutDATA.attemptSet[FINAL_STAGE_INDEX].waitMs);
               }, 1300);
@@ -955,177 +1069,32 @@
     }, true);
   });
 })();
-<!-- Fox Spirits Angered Kicked Out Popup with Buttons -->
-<div class="foxkick-modal" id="foxKickModal" style="display:none;">
-  <div class="foxkick-popup">
-    <span class="foxkick-fox">🦊💢</span>
-    <div class="foxkick-title">Fox Spirits Angered!</div>
-    <div class="foxkick-msg">
-      You have tried to enter the Den too many times.<br>
-      The spirits have cast you out!<br>
-      <span style="color:#ffb132;">This tab will close...</span>
-    </div>
-    <div class="foxkick-btns">
-      <button class="foxkick-ok" id="foxkickOkBtn">Okay</button>
-      <button class="foxkick-fuckoff" id="foxkickFuckBtn">Fuck Off</button>
-    </div>
-  </div>
-</div>
-<style>
-.foxkick-modal {
-  position: fixed;
-  z-index: 14981;
-  inset: 0;
-  background: rgba(32,19,34,0.87);
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-  animation: fadeinCongrats 0.16s;
-}
-.foxkick-popup {
-  background: linear-gradient(123deg,#270013e0 80%,#2a1a37e0 100%);
-  box-shadow: 0 0 0 8px #ff3c1160,
-              0 0 38px 7px #ffb65b21,
-              0 8px 44px 9px #ff32253a;
-  border-radius: 32px;
-  padding: 2.1rem 2.5rem 1.7rem 2.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 240px;
-  max-width: 92vw;
-  position: relative;
-}
-.foxkick-fox {
-  font-size: 3.3rem;
-  text-shadow: 0 2px 22px #ff3c1160, 0 0 12px #ffb132;
-  animation: foxPulse 1.3s infinite alternate cubic-bezier(.65,.17,.48,1.11);
-  margin-bottom: 13px;
-}
-.foxkick-title {
-  font-size: 1.42rem;
-  font-weight: 900;
-  background: linear-gradient(92deg, #fff0c7 12%, #ff6631 44%, #ff1600 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 0.92em;
-  letter-spacing: 0.01em;
-  text-align: center;
-  text-shadow: 0 2px 19px #ff3c113f,0 2px 44px #231c2c93;
-}
-.foxkick-msg {
-  margin: 0 0 1.3em 0;
-  color: #ffb132;
-  font-size: 1.09rem;
-  text-align: center;
-  text-shadow: 0 1px 8px #19121bbc;
-  font-family: 'Segoe UI',Arial,sans-serif;
-}
-.foxkick-btns {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  gap: 1em;
-}
-.foxkick-ok, .foxkick-fuckoff {
-  padding: 0.8em 2.2em;
-  border-radius: 21px;
-  border: none;
-  font-family: inherit;
-  font-size: 1.09rem;
-  font-weight: 700;
-  box-shadow: 0 2px 14px #ffb13241;
-  margin-top: 0.3em;
-  margin-bottom: 0.2em;
-  transition: background 0.19s, color 0.13s, transform 0.08s, box-shadow 0.19s;
-  cursor: pointer;
-  outline: none;
-}
-.foxkick-ok {
-  background: linear-gradient(94deg,#fca311 61%,#ff4600 100%);
-  color: #332100;
-}
-.foxkick-ok:hover,
-.foxkick-ok:focus {
-  background: linear-gradient(97deg, #ff9300 37%, #ff4600 98%);
-  color: #211a11;
-  transform: scale(1.03);
-}
-.foxkick-fuckoff {
-  background: linear-gradient(97deg, #df3516 42%, #860700 100%);
-  color: #fff6f3;
-}
-.foxkick-fuckoff:hover,
-.foxkick-fuckoff:focus {
-  background: linear-gradient(110deg,#c72118 57%,#400d0a 100%);
-  color: #fff;
-  transform: scale(1.05) rotate(-1deg);
-}
-@media (max-width: 480px) {
-  .foxkick-popup { padding: 1.2rem 0.5rem 1.0rem 0.5rem; max-width: 99vw; }
-  .foxkick-fox { font-size: 2.1rem;}
-  .foxkick-title { font-size: 1.15rem;}
-  .foxkick-btns { flex-direction: column; gap: 0.5em;}
-}
-</style>
-<script>
-(function hookFoxKickPopup(){
-  function showKickedPopup() {
-    const kickModal = document.getElementById('foxKickModal');
-    if (kickModal) {
-      kickModal.style.display = "flex";
-      // Optional: focus one of the buttons for accessibility
-      setTimeout(function(){
-        const okBtn = document.getElementById("foxkickOkBtn");
-        if (okBtn) okBtn.focus();
-      }, 90);
-    }
-  }
-  function closeTab() {
-    try { window.open('','_self',''); window.close(); } catch(e){}
-  }
-  // Button listeners
-  document.addEventListener("DOMContentLoaded", function(){
-    const okBtn = document.getElementById("foxkickOkBtn");
-    const fkBtn = document.getElementById("foxkickFuckBtn");
-    if (okBtn) okBtn.onclick = closeTab;
-    if (fkBtn) fkBtn.onclick = closeTab;
-  });
 
-  // Intercept the 9th fail "anger(ed) the fox spirits" logic and show modal instead of auto-close
-  let triedPatch = false;
-  function tryPatchKickout() {
-    if (triedPatch) return;
-    triedPatch = true;
-    let pwMsg = document.getElementById("pwMessage");
-    if (!pwMsg) return;
-    // Patch textContent on pwMsg for the special phrase
-    let _desc = Object.getOwnPropertyDescriptor(pwMsg.__proto__, "textContent");
-    if (!_desc || !_desc.set) return;
-    Object.defineProperty(pwMsg, "textContent", {
-      set(v) {
-        // Show modal if the user angered the fox spirits
-        if (typeof v === "string" && v.match(/anger(ed)? the fox spirits/i)) {
-          showKickedPopup();
-        }
-        _desc.set.call(this, v);
-      },
-      get: _desc.get,
-      configurable: true
+  // ---- Fox Spirits Angered Modal Logic ----
+  (function hookFoxKickPopup(){
+    function showKickedPopup() {
+      const kickModal = document.getElementById('foxKickModal');
+      if (kickModal) {
+        kickModal.style.display = "flex";
+        setTimeout(function(){
+          const okBtn = document.getElementById("foxkickOkBtn");
+          if (okBtn) okBtn.focus();
+        }, 90);
+      }
+    }
+    window.showKickedPopup = showKickedPopup; // Make globally available!
+
+    function closeTab() {
+      try { window.open('','_self',''); window.close(); } catch(e){}
+    }
+    // Button listeners
+    document.addEventListener("DOMContentLoaded", function(){
+      const okBtn = document.getElementById("foxkickOkBtn");
+      const fkBtn = document.getElementById("foxkickFuckBtn");
+      if (okBtn) okBtn.onclick = closeTab;
+      if (fkBtn) fkBtn.onclick = closeTab;
     });
-  }
-  // Activate patcher after DOM loaded
-  function checkAndPatchLater() {
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", tryPatchKickout);
-    } else {
-      setTimeout(tryPatchKickout, 280);
-    }
-  }
-  checkAndPatchLater();
-})();
-
+  })();
   </script>
 </body>
 </html>
